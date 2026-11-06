@@ -1,0 +1,27 @@
+# ---- .NET / Visual Studio ----
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.log
+
+# ---- Poze incarcate de utilizatori (se pastreaza doar folderul) ----
+**/wwwroot/uploads/profile-pictures/*
+!**/wwwroot/uploads/profile-pictures/.gitkeep
+
+# ---- Node.js (pentru noua versiune: API + React) ----
+node_modules/
+dist/
+coverage/
+
+# ---- Secrete si configurari locale ----
+.env
+.env.*
+!.env.example
+
+# ---- Sistem / editor ----
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

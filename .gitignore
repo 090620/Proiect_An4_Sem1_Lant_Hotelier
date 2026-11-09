@@ -12,7 +12,8 @@ obj/
 
 # ---- Node.js (pentru noua versiune: API + React) ----
 node_modules/
-dist/
+frontend/dist/
+backend/dist/
 coverage/
 
 # ---- Secrete si configurari locale ----

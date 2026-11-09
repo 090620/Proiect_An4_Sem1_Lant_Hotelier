@@ -1,0 +1,53 @@
+@model IEnumerable<Lant_Hotelier.Models.Recenzie>
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="fw-bold text-dark">Recenzii Clienți</h1>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Create" asp-route-lantId="@ViewBag.LantId"
+               class="btn btn-primary shadow-sm" style="background-color: #ff74a4; border: none;">
+                + Adaugă Recenzie
+            </a>
+        }
+    </div>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card card-dinamic h-100 shadow-sm p-2">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">@item.Nume_Client</h5>
+                        <div class="text-warning mb-2">
+                            @for (int i = 0; i < item.Rating; i++) { <span>⭐</span> }
+                            <small class="text-muted">(@item.Rating/5)</small>
+                        </div>
+                        @if (item.Hotel != null)
+                        {
+                            <p class="text-muted small mb-2">🏨 Hotel: @item.Hotel.Nume</p>
+                        }
+                        <hr class="border-pink" />
+                        <p class="card-text text-secondary">"@item.Comentariu"</p>
+                    </div>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <div class="card-footer bg-transparent border-0 pb-3 d-flex justify-content-center">
+                            <form asp-action="Delete" asp-route-id="@item.ID_Recenzie"
+                                  asp-route-lantId="@ViewBag.LantId" method="post"
+                                  onsubmit="return confirm('Ștergi această recenzie?')">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Șterge</button>
+                            </form>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert-empty">Nu există recenzii create pentru acest lanț hotelier.</div>
+    }
+</div>

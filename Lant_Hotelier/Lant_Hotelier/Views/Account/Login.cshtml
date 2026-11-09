@@ -1,0 +1,52 @@
+@model Lant_Hotelier.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Autentificare";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card-dinamic p-5">
+                <div class="text-center mb-4">
+                    <div style="font-size: 3rem;">🔐</div>
+                    <h2 class="fw-bold mt-2" style="color: #d63384;">Bine ai revenit!</h2>
+                    <p class="text-muted small">Autentifică-te pentru a accesa aplicația</p>
+                </div>
+
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger small rounded-3"></div>
+
+                <form asp-action="Login" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="mb-3">
+                        <label asp-for="Email" class="fw-bold small">📧 Email</label>
+                        <input asp-for="Email" class="form-control rounded-3" placeholder="adresa@email.com" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Password" class="fw-bold small">🔒 Parolă</label>
+                        <input asp-for="Password" class="form-control rounded-3" placeholder="••••••••" />
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-4 form-check">
+                        <input asp-for="RememberMe" class="form-check-input" />
+                        <label asp-for="RememberMe" class="form-check-label small">Ține-mă minte</label>
+                    </div>
+                    <button type="submit" class="btn w-100 fw-bold py-2 rounded-3"
+                            style="background-color: #ff74a4; color: white; border: none;">
+                        Autentifică-te
+                    </button>
+                </form>
+
+                <hr style="border-color: #ffdae9;" class="my-4" />
+                <div class="text-center small">
+                    Nu ai cont?
+                    <a asp-action="Register" style="color: #d63384;" class="fw-bold">Înregistrează-te</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

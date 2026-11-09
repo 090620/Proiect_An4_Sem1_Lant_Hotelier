@@ -1,0 +1,68 @@
+@model IEnumerable<Lant_Hotelier.Models.Camera>
+@{ ViewData["Title"] = "Camere"; }
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="fw-bold" style="color: #d63384;">🛏️ Camere</h1>
+            <h5 class="text-muted">Lanț: <strong>@(Model.FirstOrDefault()?.LantHotelier?.Nume_Lant ?? "—")</strong></h5>
+        </div>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Create" asp-route-lantId="@ViewBag.LantId"
+               class="btn fw-bold shadow-sm" style="background-color: #ff74a4; color: white; border: none;">
+                + Adaugă Cameră Nouă
+            </a>
+        }
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm rounded-4" style="border: 2px solid #ffdae9 !important;">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <span style="font-size: 2.5rem;">🛏️</span>
+                                <div class="ms-3">
+                                    <h5 class="fw-bold mb-0" style="color: #d63384;">@item.Tip_Camera</h5>
+                                    <span class="fw-bold text-dark fs-5">@item.Pret RON<span class="text-muted fs-6"> / noapte</span></span>
+                                </div>
+                            </div>
+                            @if (!string.IsNullOrEmpty(item.Descriere))
+                            {
+                                <hr style="border-color: #ffdae9;" />
+                                <p class="text-secondary small mb-0">@item.Descriere</p>
+                            }
+                        </div>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <div class="card-footer bg-transparent border-0 d-flex gap-2 pb-3 px-4">
+                                <a asp-action="Edit" asp-route-id="@item.ID_Camera"
+                                   asp-route-lantId="@ViewBag.LantId"
+                                   class="btn btn-outline-warning btn-sm flex-grow-1">Editează</a>
+                                <form asp-action="Delete" asp-route-id="@item.ID_Camera"
+                                      asp-route-lantId="@ViewBag.LantId" method="post"
+                                      class="flex-grow-1" onsubmit="return confirm('Ștergi această cameră?')">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-outline-danger btn-sm w-100">Șterge</button>
+                                </form>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info rounded-4">Nu există camere adăugate pentru acest lanț.</div>
+    }
+
+    <div class="mt-3">
+        <a asp-controller="Hoteluri" asp-action="Index" asp-route-lantId="@ViewBag.LantId"
+           class="btn btn-outline-secondary btn-sm">&larr; Înapoi la Hoteluri</a>
+    </div>
+</div>

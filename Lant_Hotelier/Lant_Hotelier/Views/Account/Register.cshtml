@@ -1,0 +1,63 @@
+@model Lant_Hotelier.ViewModels.RegisterViewModel
+@{
+    ViewData["Title"] = "Înregistrare";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card-dinamic p-5">
+                <div class="text-center mb-4">
+                    <div style="font-size: 3rem;">✨</div>
+                    <h2 class="fw-bold mt-2" style="color: #d63384;">Creează cont nou</h2>
+                    <p class="text-muted small">Completează datele pentru a te înregistra</p>
+                </div>
+
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger small rounded-3"></div>
+
+                <form asp-action="Register" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        <label asp-for="NumeComplet" class="fw-bold small">👤 Nume Complet</label>
+                        <input asp-for="NumeComplet" class="form-control rounded-3" placeholder="Ion Popescu" />
+                        <span asp-validation-for="NumeComplet" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="fw-bold small">📧 Email</label>
+                        <input asp-for="Email" class="form-control rounded-3" placeholder="adresa@email.com" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="fw-bold small">🔒 Parolă</label>
+                        <input asp-for="Password" class="form-control rounded-3" placeholder="Minim 6 caractere" />
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="ConfirmPassword" class="fw-bold small">🔒 Confirmă Parola</label>
+                        <input asp-for="ConfirmPassword" class="form-control rounded-3" placeholder="Repetă parola" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                    </div>
+
+                    <button type="submit" class="btn w-100 fw-bold py-2 rounded-3"
+                            style="background-color: #ff74a4; color: white; border: none;">
+                        Creează Contul
+                    </button>
+                </form>
+
+                <hr style="border-color: #ffdae9;" class="my-4" />
+                <div class="text-center small">
+                    Ai deja cont?
+                    <a asp-action="Login" style="color: #d63384;" class="fw-bold">Autentifică-te</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

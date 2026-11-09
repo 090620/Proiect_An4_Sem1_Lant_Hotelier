@@ -1,0 +1,59 @@
+@model Lant_Hotelier.Models.Rezervare
+
+@{
+    ViewData["Title"] = "Editează Rezervare";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 border p-4 rounded-4 shadow-sm bg-white" style="border: 2px solid #ffdae9 !important;">
+            <h2 class="fw-bold text-center mb-4" style="color: #d63384;">📋 Editează Rezervarea</h2>
+
+            <form asp-action="Edit" asp-route-lantId="@ViewBag.LantId" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="ID_Rezervare" />
+                <input type="hidden" asp-for="ID_Utilizator" />
+                <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="ID_Camera" class="fw-bold">Selectează Camera</label>
+                    <select asp-for="ID_Camera" class="form-select" asp-items="ViewBag.ID_Camera">
+                        <option value="">-- Alege camera --</option>
+                    </select>
+                    <span asp-validation-for="ID_Camera" class="text-danger small"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Data_Inceput" class="fw-bold">Data Check-in</label>
+                        <input asp-for="Data_Inceput" type="date" class="form-control" />
+                        <span asp-validation-for="Data_Inceput" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Data_Sfarsit" class="fw-bold">Data Check-out</label>
+                        <input asp-for="Data_Sfarsit" type="date" class="form-control" />
+                        <span asp-validation-for="Data_Sfarsit" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Tip_Camera" class="fw-bold">Preferință / Observații</label>
+                    <input asp-for="Tip_Camera" class="form-control"
+                           placeholder="Ex: vedere la mare, etaj superior, pat dublu..." />
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a asp-action="Index" asp-route-lantId="@ViewBag.LantId"
+                       class="btn btn-outline-secondary px-4">Anulează</a>
+                    <button type="submit" class="btn btn-warning px-4 fw-bold" style="color: white;">
+                        Salvează Modificările
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

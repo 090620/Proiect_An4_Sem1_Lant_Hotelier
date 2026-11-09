@@ -1,0 +1,62 @@
+@model Lant_Hotelier.Models.Evenimente
+
+@{
+    ViewData["Title"] = "Editează Eveniment";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 border p-4 rounded-4 shadow-sm bg-white" style="border: 2px solid #ffdae9 !important;">
+            <h2 class="fw-bold text-center mb-4" style="color: #d63384;">📅 Editează Eveniment</h2>
+
+            <form asp-action="Edit" asp-route-lantId="@ViewBag.LantId" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="ID_Eveniment" />
+                <input type="hidden" asp-for="ID_Lant" />
+                <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Titlu" class="fw-bold">Titlu Eveniment</label>
+                    <input asp-for="Titlu" class="form-control" />
+                    <span asp-validation-for="Titlu" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ImagineUrl" class="fw-bold">URL Imagine</label>
+                    <input asp-for="ImagineUrl" class="form-control" />
+                    <span asp-validation-for="ImagineUrl" class="text-danger small"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="DataSiOra" class="fw-bold">Data și Ora</label>
+                        <input asp-for="DataSiOra" class="form-control" />
+                        <span asp-validation-for="DataSiOra" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Locatie" class="fw-bold">Locație</label>
+                        <input asp-for="Locatie" class="form-control" />
+                        <span asp-validation-for="Locatie" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Descriere" class="fw-bold">Descriere</label>
+                    <textarea asp-for="Descriere" class="form-control" rows="3"></textarea>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a asp-action="Index" asp-route-lantId="@ViewBag.LantId"
+                       class="btn btn-outline-secondary px-4">Anulează</a>
+                    <button type="submit" class="btn btn-warning px-4 fw-bold" style="color: white;">
+                        Salvează Modificările
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

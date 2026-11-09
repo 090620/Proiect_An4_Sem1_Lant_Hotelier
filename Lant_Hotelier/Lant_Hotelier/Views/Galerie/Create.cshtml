@@ -1,0 +1,83 @@
+@model Lant_Hotelier.Models.Galerie
+
+@{
+    ViewData["Title"] = "Adaugă Imagine";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 border p-4 rounded-4 shadow-sm bg-white" style="border: 2px solid #ffdae9 !important;">
+            <h2 class="fw-bold text-center mb-4" style="color: #d63384;">📸 Adaugă Imagine Nouă</h2>
+
+            <form asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                <div class="mb-3">
+                    <label class="fw-bold">Selectează Lanțul</label>
+                    <select id="lantSelect" class="form-select" asp-items="ViewBag.ID_Lant">
+                        <option value="">-- Selectează Lanțul --</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ID_Hotel" class="fw-bold">Selectează Hotelul</label>
+                    <select asp-for="ID_Hotel" class="form-select" asp-items="ViewBag.ID_Hotel" id="hotelSelect">
+                        <option value="">-- Selectează mai întâi Lanțul --</option>
+                    </select>
+                    <span asp-validation-for="ID_Hotel" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="NumeImagine" class="fw-bold">Titlu Imagine</label>
+                    <input asp-for="NumeImagine" class="form-control"
+                           placeholder="Ex: Lobby Principal, Piscina..." />
+                    <span asp-validation-for="NumeImagine" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="CaleImagine" class="fw-bold">URL Imagine</label>
+                    <input asp-for="CaleImagine" class="form-control"
+                           placeholder="https://..." />
+                    <span asp-validation-for="CaleImagine" class="text-danger small"></span>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model?.CaleImagine))
+                {
+                    <div class="mb-3 text-center">
+                        <img src="@Model.CaleImagine" class="img-fluid rounded-3"
+                             style="max-height: 150px; object-fit: cover;" alt="Preview" />
+                    </div>
+                }
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a asp-action="Index" class="btn btn-outline-secondary px-4">Anulează</a>
+                    <button type="submit" class="btn px-4 fw-bold"
+                            style="background-color: #ff74a4; color: white; border: none;">
+                        Salvează Imaginea
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        document.getElementById('lantSelect').addEventListener('change', function () {
+            const lantId = this.value;
+            const hotelSelect = document.getElementById('hotelSelect');
+            hotelSelect.innerHTML = '<option value="">Se încarcă...</option>';
+            if (!lantId) { hotelSelect.innerHTML = '<option value="">-- Selectează mai întâi Lanțul --</option>'; return; }
+            fetch(`/Galerie/GetHoteluriByLant?lantId=${lantId}`)
+                .then(r => r.json())
+                .then(data => {
+                    hotelSelect.innerHTML = '<option value="">-- Selectează Hotelul --</option>';
+                    data.forEach(h => {
+                        hotelSelect.innerHTML += `<option value="${h.id}">${h.nume}</option>`;
+                    });
+                });
+        });
+    </script>
+}

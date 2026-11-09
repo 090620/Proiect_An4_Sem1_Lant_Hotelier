@@ -1,0 +1,53 @@
+﻿@model Lant_Hotelier.Models.Recenzie
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 border p-4 rounded-4 shadow-sm bg-white border-pink">
+            <h3 class="text-center mb-4 fw-bold">Lasă o Recenzie</h3>
+
+            <form asp-action="Create" asp-route-lantId="@ViewBag.LantId" method="post">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="text-danger small"></div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Numele tău</label>
+                    <input asp-for="Nume_Client" class="form-control shadow-sm" placeholder="Introdu numele tău..." />
+                    <span asp-validation-for="Nume_Client" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Selectează Hotelul</label>
+                    <select asp-for="ID_Hotel" class="form-select shadow-sm" asp-items="ViewBag.ID_Hotel">
+                        <option value="">-- Alege hotelul vizitat --</option>
+                    </select>
+                    <span asp-validation-for="ID_Hotel" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Rating (1-5 stele)</label>
+                    <input asp-for="Rating" type="number" class="form-control shadow-sm" min="1" max="5" value="5" />
+                    <span asp-validation-for="Rating" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Comentariu</label>
+                    <textarea asp-for="Comentariu" class="form-control shadow-sm" rows="4" placeholder="Cum a fost experiența ta?"></textarea>
+                    <span asp-validation-for="Comentariu" class="text-danger small"></span>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a asp-action="Index" asp-route-lantId="@ViewBag.LantId" class="btn btn-secondary px-4">Anulează</a>
+                    <button type="submit" class="btn btn-primary px-4 shadow-sm" style="background-color: #ff74a4; border: none;">
+                        Salvează Recenzia
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

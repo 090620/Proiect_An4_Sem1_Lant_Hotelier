@@ -1,0 +1,47 @@
+﻿@model Lant_Hotelier.Models.Camera
+
+@{
+    ViewData["Title"] = "Șterge Cameră";
+}
+
+<h1 class="fw-bold text-danger">Șterge Cameră</h1>
+
+<div class="alert alert-warning shadow-sm border-start border-danger border-4">
+    <h4 class="fw-bold"><i class="bi bi-exclamation-triangle"></i> Atenție!</h4>
+    Ești sigur că vrei să elimini această cameră? Această acțiune este ireversibilă!
+</div>
+
+<div class="card shadow-sm border-pink p-4 rounded-4 bg-white">
+    <hr />
+    <dl class="row fs-5">
+        <dt class="col-sm-3 text-muted">Tip Cameră:</dt>
+        <dd class="col-sm-9 fw-bold">@Model.Tip_Camera</dd>
+
+        <dt class="col-sm-3 text-muted">Preț:</dt>
+        <dd class="col-sm-9 fw-bold text-success">@Model.Pret RON</dd>
+
+        <dt class="col-sm-3 text-muted">Lanț Hotelier:</dt>
+        <dd class="col-sm-9">@(Model.LantHotelier?.Nume_Lant ?? "Nespecificat")</dd>
+    </dl>
+    
+    @* Adăugăm asp-route-lantId pentru ca redirecționarea de după ștergere să știe unde să se ducă *@
+    <form asp-action="Delete" asp-route-lantId="@ViewBag.LantId" method="post">
+        <input type="hidden" asp-for="ID_Camera" />
+        
+        <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-danger px-4 shadow-sm">
+                Confirmă Ștergerea
+            </button>
+            
+            @* Link-ul de întoarcere trebuie să conțină lantId pentru a nu pierde meniul *@
+            <a asp-action="Index" asp-route-lantId="@ViewBag.LantId" class="btn btn-outline-secondary px-4">
+                Anulează
+            </a>
+        </div>
+    </form>
+</div>
+
+<style>
+    .border-pink { border: 2px solid #ffdae9 !important; }
+    .rounded-4 { border-radius: 1rem !important; }
+</style>

@@ -1,0 +1,116 @@
+@model Lant_Hotelier.ViewModels.ProfilViewModel
+@{
+    ViewData["Title"] = "Profilul Meu";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card-dinamic p-5 text-center">
+
+                @* Mesaje succes/eroare *@
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success rounded-3 small mb-3">✅ @TempData["Success"]</div>
+                }
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger rounded-3 small mb-3">❌ @TempData["Error"]</div>
+                }
+
+                @* Poza profil *@
+                @if (!string.IsNullOrEmpty(Model.PozaProfil))
+                {
+                    <img src="@Model.PozaProfil"
+                         id="previewImg"
+                         class="rounded-circle mb-3 border"
+                         style="width:120px;height:120px;object-fit:cover;border-color:#ffdae9!important;border-width:3px!important;"
+                         alt="Poză profil"
+                         onerror="this.style.display='none';document.getElementById('avatarDefault').style.display='flex';" />
+                    <div id="avatarDefault" class="rounded-circle d-none align-items-center justify-content-center mx-auto mb-3"
+                         style="width:120px;height:120px;background:#fff0f6;border:3px solid #ffdae9;font-size:3rem;">👤</div>
+                }
+                else
+                {
+                    <div id="avatarDefault" class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"
+                         style="width:120px;height:120px;background:#fff0f6;border:3px solid #ffdae9;font-size:3rem;">👤</div>
+                    <img id="previewImg" class="rounded-circle mb-3 border d-none"
+                         style="width:120px;height:120px;object-fit:cover;border-color:#ffdae9!important;border-width:3px!important;"
+                         alt="Preview" />
+                }
+
+                <h4 class="fw-bold" style="color:#d63384;">@(Model.NumeComplet ?? Model.Email)</h4>
+                <p class="text-muted small mb-1">📧 @Model.Email</p>
+                <span class="badge rounded-pill mb-4"
+                      style="background-color:@(Model.Rol == "Admin" ? "#d63384" : "#ffdae9");color:@(Model.Rol == "Admin" ? "white" : "#d63384");">
+                    @(Model.Rol == "Admin" ? "👑 Administrator" : "👤 Utilizator")
+                </span>
+
+                <hr style="border-color:#ffdae9;" />
+
+                <h6 class="fw-bold text-start mb-3" style="color:#d63384;">🖼️ Actualizează Poza de Profil</h6>
+
+                <form asp-action="UpdatePoza" method="post" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+
+                    @* Zona drag-and-drop *@
+                    <div id="dropZone"
+                         onclick="document.getElementById('PozaFisier').click()"
+                         style="border:2px dashed #ffdae9;border-radius:1rem;padding:1.5rem;cursor:pointer;background:#fff9fc;transition:background 0.2s;"
+                         onmouseenter="this.style.background='#fff0f6'"
+                         onmouseleave="this.style.background='#fff9fc'"
+                         ondragover="event.preventDefault();this.style.background='#ffe0ef'"
+                         ondragleave="this.style.background='#fff9fc'"
+                         ondrop="handleDrop(event)">
+                        <div style="font-size:2rem;">📁</div>
+                        <p class="small text-muted mb-1">Trage o imagine aici sau <strong style="color:#d63384;">apasă pentru a selecta</strong></p>
+                        <p class="small text-muted mb-0">JPG, PNG, GIF, WEBP • Max 5MB</p>
+                    </div>
+
+                    <input type="file" name="PozaFisier" id="PozaFisier" accept="image/*" class="d-none"
+                           onchange="previewFile(this)" />
+
+                    <div id="fileNameDisplay" class="small text-muted mt-2 mb-3"></div>
+
+                    <button type="submit" class="btn w-100 fw-bold py-2 rounded-3"
+                            style="background-color:#ff74a4;color:white;border:none;">
+                        💾 Salvează Poza
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    function previewFile(input) {
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            document.getElementById('fileNameDisplay').textContent = '📎 ' + file.name;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('previewImg');
+                const def = document.getElementById('avatarDefault');
+                img.src = e.target.result;
+                img.classList.remove('d-none');
+                if (def) def.classList.add('d-none');
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+        e.currentTarget.style.background = '#fff9fc';
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            const input = document.getElementById('PozaFisier');
+            const dt = new DataTransfer();
+            dt.items.add(files[0]);
+            input.files = dt.files;
+            previewFile(input);
+        }
+    }
+</script>
+}

@@ -1,0 +1,70 @@
+@model Lant_Hotelier.Models.Oferte
+
+@{
+    ViewData["Title"] = "Editează Oferta";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 border p-4 rounded-4 shadow-sm bg-white" style="border: 2px solid #ffdae9 !important;">
+            <h2 class="fw-bold text-center mb-4" style="color: #d63384;">🏷️ Editează Oferta</h2>
+
+            <form asp-action="Edit" asp-route-lantId="@ViewBag.LantId" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="ID_Oferta" />
+                <input type="hidden" asp-for="ID_Lant" />
+                <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Titlu" class="fw-bold">Titlu Ofertă</label>
+                    <input asp-for="Titlu" class="form-control" />
+                    <span asp-validation-for="Titlu" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Descriere" class="fw-bold">Descriere</label>
+                    <textarea asp-for="Descriere" class="form-control" rows="2"></textarea>
+                    <span asp-validation-for="Descriere" class="text-danger small"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="PretVechi" class="fw-bold">Preț Vechi (€)</label>
+                        <input asp-for="PretVechi" class="form-control" type="number" step="0.01" min="0.01" />
+                        <span asp-validation-for="PretVechi" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="PretNou" class="fw-bold">Preț Nou (€)</label>
+                        <input asp-for="PretNou" class="form-control" type="number" step="0.01" min="0.01" />
+                        <span asp-validation-for="PretNou" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="ProcentReducere" class="fw-bold">Reducere (%)</label>
+                        <input asp-for="ProcentReducere" class="form-control" type="number" min="1" max="100" />
+                        <span asp-validation-for="ProcentReducere" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="CodPromotional" class="fw-bold">Cod Promo</label>
+                        <input asp-for="CodPromotional" class="form-control" />
+                        <span asp-validation-for="CodPromotional" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a asp-action="Index" asp-route-lantId="@ViewBag.LantId"
+                       class="btn btn-outline-secondary px-4">Anulează</a>
+                    <button type="submit" class="btn btn-warning px-4 fw-bold" style="color: white;">
+                        Salvează Modificările
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

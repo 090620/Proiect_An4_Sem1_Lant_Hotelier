@@ -1,0 +1,35 @@
+@using Microsoft.AspNetCore.Identity
+@using Lant_Hotelier.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<ul class="navbar-nav">
+@if (SignInManager.IsSignedIn(User))
+{
+    <li class="nav-item">
+        <a class="nav-link fw-bold" asp-controller="Account" asp-action="Profil"
+           style="color:#d63384;">
+            👤 @UserManager.GetUserName(User)
+        </a>
+    </li>
+    <li class="nav-item">
+        <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="nav-link btn btn-link border-0 fw-bold"
+                    style="color:#d63384;">Deconectare</button>
+        </form>
+    </li>
+}
+else
+{
+    <li class="nav-item me-2">
+        <a class="nav-link fw-bold" asp-controller="Account" asp-action="Register"
+           style="color:#d63384;">Register</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link fw-bold" asp-controller="Account" asp-action="Login"
+           style="color:#d63384;">Login</a>
+    </li>
+}
+</ul>

@@ -1,0 +1,92 @@
+@model Lant_Hotelier.Models.Rezervare
+@{
+    ViewData["Title"] = "Confirmare Rezervare";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="card-dinamic p-5 text-center">
+
+                @if (Model.Status == Lant_Hotelier.Models.StatusRezervare.Pending)
+                {
+                    <div style="font-size:4rem;">⏳</div>
+                    <h4 class="fw-bold mt-3" style="color:#d63384;">Rezervare Trimisă!</h4>
+                    <p class="text-muted">Rezervarea ta este în așteptare. Vei fi notificat când adminul o confirmă.</p>
+                }
+                else if (Model.Status == Lant_Hotelier.Models.StatusRezervare.Confirmata)
+                {
+                    <div style="font-size:4rem;">🎉</div>
+                    <h4 class="fw-bold mt-3 text-success">Rezervare Confirmată!</h4>
+                    <p class="text-muted">Rezervarea ta a fost confirmată. Ne vedem la hotel!</p>
+                }
+                else
+                {
+                    <div style="font-size:4rem;">😔</div>
+                    <h4 class="fw-bold mt-3 text-danger">Rezervare Respinsă</h4>
+                    <p class="text-muted">Din păcate rezervarea ta nu a putut fi onorată.</p>
+                }
+
+                <hr style="border-color:#ffdae9;" />
+
+                <div class="text-start">
+                    <h6 class="fw-bold mb-3" style="color:#d63384;">📋 Detalii Rezervare #@Model.ID_Rezervare</h6>
+                    <div class="row g-2 small">
+                        <div class="col-5 text-muted">🏨 Hotel:</div>
+                        <div class="col-7 fw-bold">@(Model.Hotel?.Nume ?? "—")</div>
+
+                        @if (Model.Hotel != null)
+                        {
+                            <div class="col-5 text-muted">📍 Locație:</div>
+                            <div class="col-7">@Model.Hotel.Oras, @Model.Hotel.Tara</div>
+                        }
+
+                        <div class="col-5 text-muted">🛏️ Cameră:</div>
+                        <div class="col-7 fw-bold">@(Model.Camera?.Tip_Camera ?? "—")</div>
+
+                        <div class="col-5 text-muted">💰 Preț/noapte:</div>
+                        <div class="col-7">@(Model.Camera?.Pret.ToString("N2")) RON</div>
+
+                        <div class="col-5 text-muted">📅 Check-in:</div>
+                        <div class="col-7">@Model.Data_Inceput.ToString("dd MMMM yyyy")</div>
+
+                        <div class="col-5 text-muted">📅 Check-out:</div>
+                        <div class="col-7">@Model.Data_Sfarsit.ToString("dd MMMM yyyy")</div>
+
+                        <div class="col-5 text-muted">🌙 Nopți:</div>
+                        <div class="col-7">@((Model.Data_Sfarsit - Model.Data_Inceput).Days)</div>
+
+                        @if (Model.Oferta != null)
+                        {
+                            <div class="col-5 text-muted">🎁 Ofertă:</div>
+                            <div class="col-7 text-success fw-bold">@Model.Oferta.Titlu (-@Model.Oferta.ProcentReducere%)</div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.Observatii))
+                        {
+                            <div class="col-5 text-muted">📝 Observații:</div>
+                            <div class="col-7">@Model.Observatii</div>
+                        }
+
+                        <div class="col-12"><hr style="border-color:#ffdae9;"></div>
+                        <div class="col-5 fw-bold fs-6">💳 TOTAL:</div>
+                        <div class="col-7 fw-bold fs-5" style="color:#d63384;">
+                            @(Model.PretTotal.HasValue ? Model.PretTotal.Value.ToString("N2") + " RON" : "—")
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex gap-3 justify-content-center">
+                    <a asp-action="RezervariMele" class="btn rounded-3 fw-bold px-4"
+                       style="background:#ffdae9;color:#d63384;border:none;">
+                        📋 Rezervările Mele
+                    </a>
+                    <a asp-action="Create" class="btn rounded-3 fw-bold px-4"
+                       style="background:#ff74a4;color:white;border:none;">
+                        ➕ Rezervare Nouă
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

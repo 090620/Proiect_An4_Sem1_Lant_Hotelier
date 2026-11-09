@@ -1,0 +1,114 @@
+@model List<Lant_Hotelier.Models.Rezervare>
+@{
+    ViewData["Title"] = "Toate Rezervările";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold" style="color:#d63384;">📋 Toate Rezervările</h3>
+        <div>
+            <span class="badge rounded-pill me-2" style="background:#ffdae9;color:#d63384;">
+                ⏳ Pending: @Model.Count(r => r.Status == Lant_Hotelier.Models.StatusRezervare.Pending)
+            </span>
+            <span class="badge rounded-pill me-2 bg-success">
+                ✅ Confirmate: @Model.Count(r => r.Status == Lant_Hotelier.Models.StatusRezervare.Confirmata)
+            </span>
+            <span class="badge rounded-pill bg-danger">
+                ❌ Respinse: @Model.Count(r => r.Status == Lant_Hotelier.Models.StatusRezervare.Respinsa)
+            </span>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success rounded-3">✅ @TempData["Success"]</div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="card-dinamic p-5 text-center">
+            <div style="font-size:3rem;">📭</div>
+            <p class="text-muted mt-3">Nu există rezervări momentan.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-3">
+        @foreach (var r in Model)
+        {
+            var badgeStyle = r.Status switch {
+                Lant_Hotelier.Models.StatusRezervare.Pending => "background:#fff3cd;color:#856404;",
+                Lant_Hotelier.Models.StatusRezervare.Confirmata => "background:#d1e7dd;color:#0a3622;",
+                _ => "background:#f8d7da;color:#58151c;"
+            };
+            var icon = r.Status switch {
+                Lant_Hotelier.Models.StatusRezervare.Pending => "⏳",
+                Lant_Hotelier.Models.StatusRezervare.Confirmata => "✅",
+                _ => "❌"
+            };
+
+            <div class="col-12">
+                <div class="card border-0 shadow-sm" style="border-radius:1rem;">
+                    <div class="card-body p-4">
+                        <div class="row align-items-center">
+                            <div class="col-md-7">
+                                <div class="d-flex align-items-center gap-3 mb-2">
+                                    <span class="badge rounded-pill px-3 py-2" style="@badgeStyle font-size:0.85rem;">
+                                        @icon @r.Status
+                                    </span>
+                                    <span class="text-muted small">📅 @r.DataCreare.ToString("dd MMM yyyy, HH:mm")</span>
+                                </div>
+                                <div class="fw-bold">🏨 @(r.Hotel?.Nume ?? r.Camera?.LantHotelier?.Nume_Lant ?? "—")</div>
+                                <div class="small text-muted">🛏️ @(r.Camera?.Tip_Camera ?? "—") | @r.Data_Inceput.ToString("dd MMM") → @r.Data_Sfarsit.ToString("dd MMM yyyy")</div>
+                                <div class="small text-muted">👤 @(r.AspNetUserId ?? "—")</div>
+                                @if (r.Oferta != null)
+                                {
+                                    <div class="small text-success">🎁 Ofertă: @r.Oferta.Titlu (-@r.Oferta.ProcentReducere%)</div>
+                                }
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <div class="fw-bold fs-5" style="color:#d63384;">
+                                    @(r.PretTotal.HasValue ? r.PretTotal.Value.ToString("N2") + " RON" : "—")
+                                </div>
+                                <div class="text-muted small">
+                                    @((r.Data_Sfarsit - r.Data_Inceput).Days) nopți
+                                </div>
+                            </div>
+                            <div class="col-md-2 d-flex flex-column gap-2">
+                                @if (r.Status == Lant_Hotelier.Models.StatusRezervare.Pending)
+                                {
+                                    <form asp-action="Accepta" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@r.ID_Rezervare" />
+                                        <button type="submit" class="btn btn-sm w-100 fw-bold rounded-3"
+                                                style="background:#d1e7dd;color:#0a3622;border:none;">
+                                            ✅ Acceptă
+                                        </button>
+                                    </form>
+                                    <form asp-action="Respinge" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@r.ID_Rezervare" />
+                                        <button type="submit" class="btn btn-sm w-100 fw-bold rounded-3"
+                                                style="background:#f8d7da;color:#58151c;border:none;">
+                                            ❌ Respinge
+                                        </button>
+                                    </form>
+                                }
+                                <form asp-action="Delete" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@r.ID_Rezervare" />
+                                    <button type="submit" class="btn btn-sm w-100 rounded-3"
+                                            style="background:#f0f0f0;color:#666;border:none;"
+                                            onclick="return confirm('Ștergi rezervarea?')">
+                                        🗑️ Șterge
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        </div>
+    }
+</div>

@@ -1,0 +1,91 @@
+@model List<Lant_Hotelier.Models.Rezervare>
+@{
+    ViewData["Title"] = "Rezervările Mele";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold" style="color:#d63384;">🏨 Rezervările Mele</h3>
+        <a asp-action="Create" class="btn fw-bold rounded-3 px-4"
+           style="background:#ff74a4;color:white;border:none;">
+            ➕ Rezervare Nouă
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="card-dinamic p-5 text-center">
+            <div style="font-size:4rem;">🏖️</div>
+            <h5 class="mt-3 fw-bold" style="color:#d63384;">Nu ai nicio rezervare încă</h5>
+            <p class="text-muted">Fă prima ta rezervare și bucură-te de o experiență de neuitat!</p>
+            <a asp-action="Create" class="btn fw-bold rounded-3 px-4 mt-2"
+               style="background:#ff74a4;color:white;border:none;">
+                🏨 Rezervă Acum
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-3">
+        @foreach (var r in Model)
+        {
+            var (badgeStyle, icon, mesaj) = r.Status switch {
+                Lant_Hotelier.Models.StatusRezervare.Pending =>
+                    ("background:#fff3cd;color:#856404;", "⏳", "Rezervarea ta este în așteptare. Adminul o va confirma în curând."),
+                Lant_Hotelier.Models.StatusRezervare.Confirmata =>
+                    ("background:#d1e7dd;color:#0a3622;", "✅", "Rezervarea ta a fost confirmată! Ne vedem la hotel."),
+                _ => ("background:#f8d7da;color:#58151c;", "❌", "Rezervarea ta a fost respinsă. Poți face o nouă rezervare.")
+            };
+
+            <div class="col-12">
+                <div class="card border-0 shadow-sm" style="border-radius:1rem;overflow:hidden;">
+                    <div class="p-1" style="@badgeStyle"></div>
+                    <div class="card-body p-4">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <span class="badge rounded-pill px-3" style="@badgeStyle">
+                                        @icon @r.Status
+                                    </span>
+                                    <span class="text-muted small">Creată: @r.DataCreare.ToString("dd MMM yyyy")</span>
+                                </div>
+                                <h6 class="fw-bold mb-1">🏨 @(r.Hotel?.Nume ?? r.Camera?.LantHotelier?.Nume_Lant ?? "Hotel")</h6>
+                                @if (r.Hotel != null)
+                                {
+                                    <div class="small text-muted mb-1">📍 @r.Hotel.Oras, @r.Hotel.Tara</div>
+                                }
+                                <div class="small text-muted">🛏️ @(r.Camera?.Tip_Camera ?? "—")</div>
+                                <div class="small text-muted">📅 @r.Data_Inceput.ToString("dd MMM yyyy") → @r.Data_Sfarsit.ToString("dd MMM yyyy")
+                                    (@((r.Data_Sfarsit - r.Data_Inceput).Days) nopți)
+                                </div>
+                                @if (r.Oferta != null)
+                                {
+                                    <div class="small text-success mt-1">🎁 Ofertă aplicată: @r.Oferta.Titlu (-@r.Oferta.ProcentReducere%)</div>
+                                }
+                                @if (!string.IsNullOrEmpty(r.Observatii))
+                                {
+                                    <div class="small text-muted mt-1">📝 @r.Observatii</div>
+                                }
+                                <div class="mt-2 small p-2 rounded-3" style="background:#f8f9fa;">
+                                    ℹ️ @mesaj
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="fw-bold fs-4" style="color:#d63384;">
+                                    @(r.PretTotal.HasValue ? r.PretTotal.Value.ToString("N2") + " RON" : "—")
+                                </div>
+                                <div class="text-muted small">Total estimat</div>
+                                <a asp-action="Confirmare" asp-route-id="@r.ID_Rezervare"
+                                   class="btn btn-sm mt-3 rounded-3"
+                                   style="background:#ffdae9;color:#d63384;border:none;">
+                                    👁️ Vezi Detalii
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        </div>
+    }
+</div>

@@ -1,0 +1,43 @@
+@model Lant_Hotelier.Models.LantHotelier
+
+@{
+    ViewData["Title"] = "Adaugă Lanț Nou";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 border p-4 rounded-4 shadow-sm bg-white" style="border: 2px solid #ffdae9 !important;">
+            <h2 class="text-center fw-bold mb-4" style="color: #d63384;">🏨 Adaugă Lanț Nou</h2>
+
+            <form asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Nume_Lant" class="fw-bold">Nume Lanț Hotelier</label>
+                    <input asp-for="Nume_Lant" class="form-control" placeholder="Ex: Marriott Hotels" />
+                    <span asp-validation-for="Nume_Lant" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Descriere" class="fw-bold">Descriere</label>
+                    <textarea asp-for="Descriere" class="form-control" rows="4"
+                              placeholder="Descriere generală a lanțului hotelier..."></textarea>
+                    <span asp-validation-for="Descriere" class="text-danger small"></span>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a asp-action="Index" class="btn btn-outline-secondary px-4">Anulează</a>
+                    <button type="submit" class="btn px-4 fw-bold"
+                            style="background-color: #ff74a4; color: white; border: none;">
+                        Salvează Lanțul
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

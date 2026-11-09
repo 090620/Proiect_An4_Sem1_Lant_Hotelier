@@ -1,0 +1,58 @@
+@model IEnumerable<Lant_Hotelier.Models.LantHotelier>
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="fw-bold">Management Lanțuri Hoteliere</h1>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Create" class="btn btn-primary shadow-sm">+ Adaugă Lanț Nou</a>
+        }
+    </div>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card card-dinamic h-100 p-4 shadow-sm text-center">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <span style="font-size: 3rem;">🏨</span>
+                        </div>
+                        <h3 class="fw-bold mb-2" style="color: #d63384;">@item.Nume_Lant</h3>
+                        <p class="text-secondary small">@item.Descriere</p>
+                    </div>
+
+                    <div class="card-footer bg-transparent border-0 d-flex flex-column gap-2">
+                        <a asp-controller="Hoteluri"
+                           asp-action="Index"
+                           asp-route-lantId="@item.ID_Lant"
+                           class="btn btn-danger w-100 fw-bold shadow-sm">
+                            Gestionează Lanț
+                        </a>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <div class="d-flex gap-2">
+                                <a asp-action="Edit" asp-route-id="@item.ID_Lant"
+                                   class="btn btn-sm btn-outline-warning flex-grow-1">Editează</a>
+                                <form asp-action="Delete" asp-route-id="@item.ID_Lant" method="post"
+                                      class="flex-grow-1"
+                                      onsubmit="return confirm('ATENȚIE: Ștergerea lanțului va șterge tot ce ține de el! Continui?')">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-outline-danger w-100">Șterge</button>
+                                </form>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert-empty">
+            Nu există lanțuri hoteliere create. Începe prin a adăuga unul!
+        </div>
+    }
+</div>

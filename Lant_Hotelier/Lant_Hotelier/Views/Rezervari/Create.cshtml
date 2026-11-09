@@ -1,0 +1,253 @@
+@model Lant_Hotelier.Models.Rezervare
+@{
+    ViewData["Title"] = "Rezervare Nouă";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card-dinamic p-5">
+                <h3 class="fw-bold text-center mb-4" style="color:#d63384;">🏨 Rezervare Nouă</h3>
+
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger small rounded-3"></div>
+
+                <form asp-action="Create" method="post" id="formRezervare">
+                    @Html.AntiForgeryToken()
+
+                    @* STEP 1: Lant *@
+                    <div class="step-card mb-4 p-4 rounded-3" style="background:#fff0f6;border:1.5px solid #ffdae9;">
+                        <h6 class="fw-bold mb-3" style="color:#d63384;">📍 Pasul 1 — Alege Lanțul Hotelier</h6>
+                        <select id="selectLant" class="form-select rounded-3" onchange="incarcaHoteluri(this.value)" required>
+                            <option value="">-- Selectează un lanț --</option>
+                            @foreach (var item in (ViewBag.Lanturi as Microsoft.AspNetCore.Mvc.Rendering.SelectList))
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+
+                    @* STEP 2: Hotel *@
+                    <div id="stepHotel" class="step-card mb-4 p-4 rounded-3 d-none" style="background:#fff0f6;border:1.5px solid #ffdae9;">
+                        <h6 class="fw-bold mb-3" style="color:#d63384;">🏩 Pasul 2 — Alege Hotelul</h6>
+                        <div id="listaHoteluri" class="row g-3"></div>
+                        <input type="hidden" name="ID_Hotel" id="hiddenHotel" />
+                    </div>
+
+                    @* STEP 3: Camera *@
+                    <div id="stepCamera" class="step-card mb-4 p-4 rounded-3 d-none" style="background:#fff0f6;border:1.5px solid #ffdae9;">
+                        <h6 class="fw-bold mb-3" style="color:#d63384;">🛏️ Pasul 3 — Alege Camera</h6>
+                        <div id="listaCamere" class="row g-3"></div>
+                        <input type="hidden" name="ID_Camera" id="hiddenCamera" />
+                    </div>
+
+                    @* STEP 4: Date *@
+                    <div id="stepDate" class="step-card mb-4 p-4 rounded-3 d-none" style="background:#fff0f6;border:1.5px solid #ffdae9;">
+                        <h6 class="fw-bold mb-3" style="color:#d63384;">📅 Pasul 4 — Perioada</h6>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="fw-bold small">Check-in</label>
+                                <input type="date" name="Data_Inceput" id="dataInceput" class="form-control rounded-3"
+                                       min="@DateTime.Today.ToString("yyyy-MM-dd")" onchange="calculeazaTotal()" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="fw-bold small">Check-out</label>
+                                <input type="date" name="Data_Sfarsit" id="dataSfarsit" class="form-control rounded-3"
+                                       min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")" onchange="calculeazaTotal()" required />
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <label class="fw-bold small">📝 Observații (opțional)</label>
+                            <textarea name="Observatii" class="form-control rounded-3" rows="2"
+                                      placeholder="Ex: cameră la etaj, pat suplimentar..."></textarea>
+                        </div>
+                    </div>
+
+                    @* STEP 5: Oferta *@
+                    <div id="stepOferta" class="step-card mb-4 p-4 rounded-3 d-none" style="background:#fff0f6;border:1.5px solid #ffdae9;">
+                        <h6 class="fw-bold mb-3" style="color:#d63384;">🎁 Pasul 5 — Ofertă (opțional)</h6>
+                        <p class="text-muted small">Selectează o ofertă pentru reducere suplimentară:</p>
+                        <div id="listaOferte" class="row g-3"></div>
+                        <input type="hidden" name="ID_Oferta" id="hiddenOferta" />
+                        <button type="button" class="btn btn-outline-secondary btn-sm mt-2" onclick="saritOferta()">
+                            Continuă fără ofertă →
+                        </button>
+                    </div>
+
+                    @* STEP 6: Sumar *@
+                    <div id="stepSumar" class="d-none">
+                        <div class="p-4 rounded-3 mb-4" style="background:#fff0f6;border:1.5px solid #ffdae9;">
+                            <h6 class="fw-bold mb-3" style="color:#d63384;">📋 Sumar Rezervare</h6>
+                            <div id="continutSumar"></div>
+                        </div>
+                        <input type="hidden" name="PretTotal" id="hiddenPretTotal" />
+                        <button type="submit" class="btn w-100 fw-bold py-3 rounded-3 fs-5"
+                                style="background:#d63384;color:white;border:none;">
+                            ✅ Trimite Rezervarea
+                        </button>
+                        <p class="text-muted small text-center mt-2">
+                            Rezervarea va fi în stare <strong>Pending</strong> până la confirmarea adminului.
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+let pretCamera = 0;
+let lantIdSelectat = 0;
+
+async function incarcaHoteluri(lantId) {
+    if (!lantId) return;
+    lantIdSelectat = lantId;
+    // Reset steps
+    ['stepHotel','stepCamera','stepDate','stepOferta','stepSumar'].forEach(id =>
+        document.getElementById(id).classList.add('d-none'));
+    document.getElementById('hiddenCamera').value = '';
+    document.getElementById('hiddenHotel').value = '';
+    document.getElementById('hiddenOferta').value = '';
+
+    const res = await fetch(`/Rezervari/GetHoteluri?lantId=${lantId}`);
+    const hoteluri = await res.json();
+
+    const div = document.getElementById('listaHoteluri');
+    div.innerHTML = '';
+    hoteluri.forEach(h => {
+        div.innerHTML += `
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm h-100 hotel-card" onclick="selecteazaHotel(${h.id}, this)"
+                 style="cursor:pointer;border-radius:1rem;">
+                <div class="card-body p-3">
+                    <div style="font-size:1.5rem;">🏨</div>
+                    <div class="fw-bold">${h.nume}</div>
+                    <div class="text-muted small">📍 ${h.oras}</div>
+                </div>
+            </div>
+        </div>`;
+    });
+    document.getElementById('stepHotel').classList.remove('d-none');
+}
+
+async function selecteazaHotel(hotelId, el) {
+    document.querySelectorAll('.hotel-card').forEach(c => c.style.borderColor = '');
+    el.style.border = '2px solid #d63384';
+    document.getElementById('hiddenHotel').value = hotelId;
+
+    const res = await fetch(`/Rezervari/GetCamere?hotelId=${hotelId}`);
+    const camere = await res.json();
+
+    const div = document.getElementById('listaCamere');
+    div.innerHTML = '';
+    camere.forEach(c => {
+        div.innerHTML += `
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm h-100 camera-card" onclick="selecteazaCamera(${c.id}, ${c.pret}, '${c.tip}', this)"
+                 style="cursor:pointer;border-radius:1rem;">
+                <div class="card-body p-3">
+                    <div style="font-size:1.5rem;">🛏️</div>
+                    <div class="fw-bold">${c.tip}</div>
+                    <div class="text-muted small">${c.descriere || ''}</div>
+                    <div class="fw-bold mt-2" style="color:#d63384;">${c.pret} RON / noapte</div>
+                </div>
+            </div>
+        </div>`;
+    });
+    document.getElementById('stepCamera').classList.remove('d-none');
+    document.getElementById('stepDate').classList.add('d-none');
+    document.getElementById('stepOferta').classList.add('d-none');
+    document.getElementById('stepSumar').classList.add('d-none');
+}
+
+function selecteazaCamera(cameraId, pret, tip, el) {
+    document.querySelectorAll('.camera-card').forEach(c => c.style.border = '');
+    el.style.border = '2px solid #d63384';
+    document.getElementById('hiddenCamera').value = cameraId;
+    pretCamera = pret;
+    document.getElementById('stepDate').classList.remove('d-none');
+    document.getElementById('stepOferta').classList.add('d-none');
+    document.getElementById('stepSumar').classList.add('d-none');
+}
+
+async function calculeazaTotal() {
+    const start = document.getElementById('dataInceput').value;
+    const end = document.getElementById('dataSfarsit').value;
+    if (!start || !end || start >= end) return;
+
+    // Incarca ofertele dupa ce avem datele
+    const res = await fetch(`/Rezervari/GetOferte?lantId=${lantIdSelectat}`);
+    const oferte = await res.json();
+
+    const div = document.getElementById('listaOferte');
+    div.innerHTML = '';
+    if (oferte.length > 0) {
+        oferte.forEach(o => {
+            div.innerHTML += `
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm h-100 oferta-card" onclick="selecteazaOferta(${o.id}, ${o.procent}, this)"
+                     style="cursor:pointer;border-radius:1rem;">
+                    <div class="card-body p-3">
+                        <div class="fw-bold">${o.titlu}</div>
+                        <div class="badge" style="background:#d63384;color:white;">-${o.procent}%</div>
+                        <div class="small text-muted">${o.cod || ''}</div>
+                    </div>
+                </div>
+            </div>`;
+        });
+        document.getElementById('stepOferta').classList.remove('d-none');
+    } else {
+        saritOferta();
+    }
+}
+
+function selecteazaOferta(ofertaId, procent, el) {
+    document.querySelectorAll('.oferta-card').forEach(c => c.style.border = '');
+    el.style.border = '2px solid #d63384';
+    document.getElementById('hiddenOferta').value = ofertaId;
+    afiseazaSumar(procent);
+}
+
+function saritOferta() {
+    document.getElementById('hiddenOferta').value = '';
+    afiseazaSumar(0);
+}
+
+function afiseazaSumar(procentReducere) {
+    const start = new Date(document.getElementById('dataInceput').value);
+    const end = new Date(document.getElementById('dataSfarsit').value);
+    const nrNopti = Math.round((end - start) / (1000 * 60 * 60 * 24));
+    let total = pretCamera * nrNopti;
+    let totalDupaReducere = procentReducere > 0 ? total * (1 - procentReducere / 100) : total;
+    document.getElementById('hiddenPretTotal').value = totalDupaReducere.toFixed(2);
+
+    const cameraId = document.getElementById('hiddenCamera').value;
+    const hotelId = document.getElementById('hiddenHotel').value;
+
+    let html = `
+        <div class="row g-2">
+            <div class="col-6 text-muted small">📅 Check-in:</div>
+            <div class="col-6 small fw-bold">${document.getElementById('dataInceput').value}</div>
+            <div class="col-6 text-muted small">📅 Check-out:</div>
+            <div class="col-6 small fw-bold">${document.getElementById('dataSfarsit').value}</div>
+            <div class="col-6 text-muted small">🌙 Număr nopți:</div>
+            <div class="col-6 small fw-bold">${nrNopti}</div>
+            <div class="col-6 text-muted small">💰 Preț/noapte:</div>
+            <div class="col-6 small fw-bold">${pretCamera} RON</div>`;
+
+    if (procentReducere > 0) {
+        html += `
+            <div class="col-6 text-muted small">🎁 Reducere:</div>
+            <div class="col-6 small fw-bold text-success">-${procentReducere}%</div>`;
+    }
+    html += `
+            <div class="col-12"><hr style="border-color:#ffdae9;"></div>
+            <div class="col-6 fw-bold">TOTAL:</div>
+            <div class="col-6 fw-bold fs-5" style="color:#d63384;">${totalDupaReducere.toFixed(2)} RON</div>
+        </div>`;
+
+    document.getElementById('continutSumar').innerHTML = html;
+    document.getElementById('stepSumar').classList.remove('d-none');
+}
+</script>
+}

@@ -1,0 +1,81 @@
+@model IEnumerable<Lant_Hotelier.Models.Hotel>
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h1 class="fw-bold text-dark">Gestionare Hoteluri</h1>
+            <h5 class="text-muted">Lanț: <span style="color: #d63384;">@ViewBag.NumeLant</span></h5>
+        </div>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Create" asp-route-lantId="@ViewBag.LantId" class="btn btn-primary shadow-sm">
+                + Adaugă Hotel Nou
+            </a>
+        }
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="card card-dinamic shadow-sm border-0">
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4">Nume Hotel</th>
+                            <th>Oraș</th>
+                            <th>Adresă</th>
+                            <th>Lanț Hotelier</th>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <th class="text-center">Acțiuni</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 fw-bold">@item.Nume</td>
+                                <td>@item.Oras</td>
+                                <td>@item.Adresa</td>
+                                <td>
+                                    @if (item.LantHotelier != null)
+                                    {
+                                        <span class="badge bg-info text-dark">@item.LantHotelier.Nume_Lant</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">Fără Lanț</span>
+                                    }
+                                </td>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a asp-action="Edit" asp-route-id="@item.ID_Hotel"
+                                               asp-route-lantId="@ViewBag.LantId"
+                                               class="btn btn-sm btn-outline-warning">Editează</a>
+                                            <form asp-action="Delete" asp-route-id="@item.ID_Hotel"
+                                                  asp-route-lantId="@ViewBag.LantId" method="post"
+                                                  onsubmit="return confirm('Sigur dorești să ștergi acest hotel?')">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">Șterge</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="alert-empty">
+            Nu există hoteluri adăugate în acest lanț.
+        </div>
+    }
+</div>

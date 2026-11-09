@@ -1,0 +1,71 @@
+﻿@model Lant_Hotelier.Models.LantHotelier
+
+@{
+    ViewData["Title"] = "Editează Lanț Hotelier";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            @* Cardul principal cu margini roz și umbră, conform stilului ales *@
+            <div class="card shadow-sm border-pink rounded-4">
+                <div class="card-header bg-transparent border-0 pt-4">
+                    <h2 class="text-center fw-bold text-dark">
+                        <span style="color: #d63384;">🏨</span> Editează Lanț: @Model.Nume_Lant
+                    </h2>
+                </div>
+                
+                <div class="card-body p-4">
+                    <form asp-action="Edit" method="post">
+                        @Html.AntiForgeryToken()
+                        
+                        @* CAMP ASCUNS ESENȚIAL: Fără acesta, Controller-ul primește ID 0
+                           și nu știe ce rând să actualizeze în baza de date.
+                        *@
+                        <input type="hidden" asp-for="ID_Lant" />
+
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger border-0 shadow-sm mb-4" style="border-radius: 1rem;"></div>
+
+                        <div class="mb-4">
+                            <label asp-for="Nume_Lant" class="form-label fw-bold small text-muted text-uppercase">Numele Lanțului</label>
+                            <input asp-for="Nume_Lant" class="form-control form-control-lg border-pink shadow-sm rounded-3" placeholder="Ex: Ramada Hotels" />
+                            <span asp-validation-for="Nume_Lant" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Descriere" class="form-label fw-bold small text-muted text-uppercase">Descriere Detaliată</label>
+                            <textarea asp-for="Descriere" class="form-control border-pink shadow-sm rounded-3" rows="5" placeholder="Descrie facilitățile și viziunea lanțului..."></textarea>
+                            <span asp-validation-for="Descriere" class="text-danger small"></span>
+                        </div>
+
+                        <hr class="border-pink opacity-25 my-4">
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a asp-action="Index" class="btn btn-link text-secondary text-decoration-none fw-bold">
+                                ⬅ Înapoi la listă
+                            </a>
+                            
+                            <button type="submit" class="btn btn-warning px-5 py-2 fw-bold shadow-sm text-dark rounded-pill">
+                                Salvează Modificările
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            @* Notă informativă pentru utilizator *@
+            <div class="text-center mt-4">
+                <p class="text-muted small">
+                    <i class="bi bi-info-circle"></i> Modificările vor fi vizibile imediat în toate hotelurile asociate.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @* Validare client-side pentru a preveni trimiterea formularului dacă este gol *@
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

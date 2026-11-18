@@ -3,5 +3,13 @@
   "version": "0.1.0",
   "description": "API REST pentru HotelExplorer (Node.js + Express + Prisma)",
   "type": "module",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^18.0.10",
+    "express": "^5.3.0"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  }
 }

@@ -1,0 +1,7 @@
+{
+  "name": "lant-hotelier-backend",
+  "version": "0.1.0",
+  "description": "API REST pentru HotelExplorer (Node.js + Express + Prisma)",
+  "type": "module",
+  "license": "ISC"
+}

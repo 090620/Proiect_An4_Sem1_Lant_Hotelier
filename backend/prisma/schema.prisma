@@ -1,0 +1,158 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  REJECTED
+}
+
+model User {
+  id             Int           @id @default(autoincrement())
+  email          String        @unique
+  passwordHash   String
+  fullName       String
+  profilePicture String?
+  role           Role          @default(USER)
+  createdAt      DateTime      @default(now())
+  reservations   Reservation[]
+  reviews        Review[]
+}
+
+model Chain {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  hotels      Hotel[]
+  services    Service[]
+  offers      Offer[]
+  events      Event[]
+}
+
+model Hotel {
+  id           Int            @id @default(autoincrement())
+  name         String
+  city         String
+  country      String
+  address      String
+  description  String?
+  image        String?
+  chainId      Int
+  chain        Chain          @relation(fields: [chainId], references: [id], onDelete: Cascade)
+  rooms        Room[]
+  gallery      GalleryImage[]
+  reviews      Review[]
+  reservations Reservation[]
+  services     Service[]
+
+  @@index([chainId])
+}
+
+model Room {
+  id           Int           @id @default(autoincrement())
+  type         String
+  price        Decimal       @db.Decimal(10, 2)
+  description  String?
+  hotelId      Int
+  hotel        Hotel         @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  reservations Reservation[]
+
+  @@index([hotelId])
+}
+
+model Service {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  price       Decimal? @db.Decimal(10, 2)
+  icon        String?
+  chainId     Int
+  chain       Chain    @relation(fields: [chainId], references: [id], onDelete: Cascade)
+  hotels      Hotel[]
+
+  @@index([chainId])
+}
+
+model Offer {
+  id              Int           @id @default(autoincrement())
+  title           String
+  description     String?
+  oldPrice        Decimal       @db.Decimal(10, 2)
+  newPrice        Decimal       @db.Decimal(10, 2)
+  discountPercent Int
+  promoCode       String?
+  chainId         Int
+  chain           Chain         @relation(fields: [chainId], references: [id], onDelete: Cascade)
+  reservations    Reservation[]
+
+  @@index([chainId])
+}
+
+model Event {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  image       String?
+  startsAt    DateTime
+  location    String?
+  chainId     Int
+  chain       Chain    @relation(fields: [chainId], references: [id], onDelete: Cascade)
+
+  @@index([chainId])
+}
+
+model GalleryImage {
+  id        Int    @id @default(autoincrement())
+  imageName String
+  imagePath String
+  hotelId   Int
+  hotel     Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+
+  @@index([hotelId])
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  comment   String
+  rating    Int
+  createdAt DateTime @default(now())
+  hotelId   Int
+  userId    Int
+  hotel     Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([hotelId])
+  @@index([userId])
+}
+
+model Reservation {
+  id         Int               @id @default(autoincrement())
+  startDate  DateTime          @db.Date
+  endDate    DateTime          @db.Date
+  notes      String?
+  status     ReservationStatus @default(PENDING)
+  totalPrice Decimal           @db.Decimal(10, 2)
+  createdAt  DateTime          @default(now())
+  userId     Int
+  roomId     Int
+  hotelId    Int
+  offerId    Int?
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room       Room              @relation(fields: [roomId], references: [id], onDelete: Restrict)
+  hotel      Hotel             @relation(fields: [hotelId], references: [id], onDelete: Restrict)
+  offer      Offer?            @relation(fields: [offerId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([roomId, startDate, endDate])
+}

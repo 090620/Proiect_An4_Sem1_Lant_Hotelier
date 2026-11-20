@@ -19,3 +19,16 @@ export const sessionMiddleware = session({
   saveUninitialized: false,
   cookie: sessionCookieOptions,
 });
+
+// Dupa login se creeaza o sesiune noua (impotriva session fixation).
+export function regenerateSession(req) {
+  return new Promise((resolve, reject) => {
+    req.session.regenerate((err) => (err ? reject(err) : resolve()));
+  });
+}
+
+export function destroySession(req) {
+  return new Promise((resolve, reject) => {
+    req.session.destroy((err) => (err ? reject(err) : resolve()));
+  });
+}

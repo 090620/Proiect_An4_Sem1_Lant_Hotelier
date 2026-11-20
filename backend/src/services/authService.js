@@ -4,6 +4,9 @@ import { AppError } from '../errors.js';
 
 const BCRYPT_ROUNDS = 10;
 
+// Hash fals, folosit cand emailul nu exista, ca timpul de raspuns sa nu arate ce conturi exista.
+const DUMMY_HASH = bcrypt.hashSync('parola-fals', BCRYPT_ROUNDS);
+
 export const publicUserFields = {
   id: true,
   email: true,
@@ -34,4 +37,19 @@ export async function register({ email, password, fullName }) {
     }
     throw error;
   }
+}
+
+export async function login({ email, password }) {
+  const found = await prisma.user.findUnique({
+    where: { email },
+    select: { ...publicUserFields, passwordHash: true },
+  });
+
+  const passwordOk = await bcrypt.compare(password, found ? found.passwordHash : DUMMY_HASH);
+  if (!found || !passwordOk) {
+    throw new AppError(401, 'Email sau parola incorecta');
+  }
+
+  const { passwordHash, ...user } = found; // eslint-disable-line no-unused-vars
+  return user;
 }

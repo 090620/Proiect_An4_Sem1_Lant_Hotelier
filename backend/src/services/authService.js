@@ -4,7 +4,7 @@ import { AppError } from '../errors.js';
 
 const BCRYPT_ROUNDS = 10;
 
-const publicUserFields = {
+export const publicUserFields = {
   id: true,
   email: true,
   fullName: true,

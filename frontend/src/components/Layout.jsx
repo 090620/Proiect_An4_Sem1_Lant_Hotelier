@@ -20,6 +20,7 @@ export default function Layout() {
           <nav className="nav">
             {user ? (
               <>
+                <Link to="/hotels">Hoteluri</Link>
                 <span className="nav-user">{user.fullName}</span>
                 <button type="button" className="button button-secondary" onClick={handleLogout}>
                   Iesi din cont

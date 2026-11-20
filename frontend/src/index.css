@@ -148,3 +148,28 @@ form input {
   margin: 0.4rem 0 0;
   padding-left: 1.2rem;
 }
+
+.search {
+  width: 100%;
+  max-width: 420px;
+  margin-bottom: 1.25rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font: inherit;
+}
+
+.hotel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.hotel-card h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.15rem;
+}
+
+.hotel-card p {
+  margin: 0.35rem 0 0;
+}

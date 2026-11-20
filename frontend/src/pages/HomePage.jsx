@@ -13,7 +13,8 @@ export default function HomePage() {
       <h1>HotelExplorer</h1>
       {user ? (
         <p>
-          Esti autentificat ca <strong>{user.fullName}</strong> ({user.role}).
+          Esti autentificat ca <strong>{user.fullName}</strong> ({user.role}).{' '}
+          <Link to="/hotels">Vezi hotelurile</Link>
         </p>
       ) : (
         <p>

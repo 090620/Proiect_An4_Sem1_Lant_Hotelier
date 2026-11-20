@@ -1,21 +1,22 @@
-import { useEffect, useState } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import AuthProvider from './context/AuthProvider.jsx';
+import Layout from './components/Layout.jsx';
+import HomePage from './pages/HomePage.jsx';
+import LoginPage from './pages/LoginPage.jsx';
+import RegisterPage from './pages/RegisterPage.jsx';
 
 export default function App() {
-  const [apiStatus, setApiStatus] = useState('se verifica...');
-
-  useEffect(() => {
-    fetch('/api/health')
-      .then((response) => response.json())
-      .then((data) => setApiStatus(data.status))
-      .catch(() => setApiStatus('indisponibil'));
-  }, []);
-
   return (
-    <main className="page">
-      <h1>HotelExplorer</h1>
-      <p>
-        Starea API-ului: <strong>{apiStatus}</strong>
-      </p>
-    </main>
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+          </Route>
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }

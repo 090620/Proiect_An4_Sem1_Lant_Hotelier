@@ -1,0 +1,12 @@
+{
+  "name": "lant-hotelier-postman",
+  "version": "0.1.0",
+  "description": "Teste API (colectie Postman) rulate cu Newman",
+  "private": true,
+  "scripts": {
+    "test": "newman run HotelExplorer.postman_collection.json -e local.postman_environment.json"
+  },
+  "devDependencies": {
+    "newman": "^6.2.3"
+  }
+}

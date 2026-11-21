@@ -1,5 +1,12 @@
-import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.js';
+
+const NAV_LINKS = [
+  { to: '/hotels', label: 'Hoteluri' },
+  { to: '/chains', label: 'Lanțuri' },
+  { to: '/rooms', label: 'Camere' },
+  { to: '/services', label: 'Servicii' },
+];
 
 export default function Layout() {
   const { user, logout } = useAuth();
@@ -11,33 +18,59 @@ export default function Layout() {
   }
 
   return (
-    <>
+    <div className="app">
       <header className="header">
         <div className="header-inner">
           <Link to="/" className="brand">
+            <span className="brand-mark" aria-hidden="true">
+              H
+            </span>
             HotelExplorer
           </Link>
-          <nav className="nav">
+          {user && (
+            <nav className="main-nav" aria-label="Navigare principală">
+              {NAV_LINKS.map((link) => (
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
+                >
+                  {link.label}
+                </NavLink>
+              ))}
+            </nav>
+          )}
+          <div className="header-actions">
             {user ? (
               <>
-                <Link to="/hotels">Hoteluri</Link>
-                <span className="nav-user">{user.fullName}</span>
-                <button type="button" className="button button-secondary" onClick={handleLogout}>
-                  Iesi din cont
+                <div className="user-chip">
+                  <span className="user-avatar" aria-hidden="true">
+                    {user.fullName.charAt(0).toUpperCase()}
+                  </span>
+                  <span className="user-name">{user.fullName}</span>
+                  {user.role === 'ADMIN' && <span className="role-tag">Admin</span>}
+                </div>
+                <button type="button" className="button button-ghost" onClick={handleLogout}>
+                  Ieșire
                 </button>
               </>
             ) : (
               <>
-                <Link to="/login">Autentificare</Link>
-                <Link to="/register">Cont nou</Link>
+                <Link to="/login" className="button button-ghost">
+                  Autentificare
+                </Link>
+                <Link to="/register" className="button button-accent">
+                  Cont nou
+                </Link>
               </>
             )}
-          </nav>
+          </div>
         </div>
       </header>
       <main className="page">
         <Outlet />
       </main>
-    </>
+      <footer className="footer">HotelExplorer · proiect universitar</footer>
+    </div>
   );
 }

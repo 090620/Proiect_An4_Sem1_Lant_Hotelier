@@ -1,18 +1,24 @@
 :root {
-  --bg: #f5f6f8;
+  --navy: #12263f;
+  --navy-soft: #1b3a5f;
+  --accent: #c8963e;
+  --accent-dark: #a97a2c;
+  --bg: #f3f5f8;
   --surface: #ffffff;
-  --text: #1c2430;
-  --muted: #5d6877;
-  --border: #d9dee5;
-  --primary: #1f5fbf;
-  --primary-dark: #174a96;
+  --text: #18222f;
+  --muted: #5f6b7a;
+  --border: #dfe4ea;
   --danger: #b3261e;
+  --radius: 12px;
+  --shadow-sm: 0 1px 2px rgba(18, 38, 63, 0.06), 0 1px 3px rgba(18, 38, 63, 0.08);
+  --shadow-md: 0 10px 28px rgba(18, 38, 63, 0.14);
   font-family:
     system-ui,
     -apple-system,
     'Segoe UI',
     Roboto,
     sans-serif;
+  line-height: 1.5;
   color: var(--text);
   background: var(--bg);
 }
@@ -25,95 +31,196 @@ body {
   margin: 0;
 }
 
-.page {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
+a {
+  color: var(--navy-soft);
 }
 
-a {
-  color: var(--primary);
+h1,
+h2,
+h3 {
+  line-height: 1.25;
 }
 
 h1 {
-  margin-top: 0;
+  margin: 0 0 0.35rem;
+  font-size: 1.9rem;
+  letter-spacing: -0.01em;
 }
 
 .muted {
   color: var(--muted);
 }
 
-.header {
+/* ---------- Structura paginii ---------- */
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.page {
+  flex: 1;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.footer {
+  padding: 1.25rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
   background: var(--surface);
-  border-bottom: 1px solid var(--border);
+}
+
+/* ---------- Bara de sus ---------- */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--navy);
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(18, 38, 63, 0.25);
 }
 
 .header-inner {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 0.75rem 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.brand {
-  font-weight: 700;
-  font-size: 1.15rem;
-  text-decoration: none;
-}
-
-.nav {
   display: flex;
   align-items: center;
   gap: 1rem;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0.7rem 1.25rem;
 }
 
-.nav-user {
-  color: var(--muted);
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-decoration: none;
 }
 
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
   border-radius: 8px;
-  padding: 1.5rem;
+  background: var(--accent);
+  color: var(--navy);
+  font-weight: 800;
 }
 
-.auth-card {
-  max-width: 420px;
-  margin: 2rem auto;
+.main-nav {
+  display: flex;
+  gap: 0.25rem;
+  margin-left: 1rem;
 }
 
-form label {
-  display: block;
-  margin-bottom: 1rem;
-  font-weight: 600;
+.nav-link {
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  color: #cfd8e3;
+  font-weight: 500;
+  text-decoration: none;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 
-form input {
-  display: block;
-  width: 100%;
-  margin-top: 0.35rem;
-  padding: 0.55rem 0.7rem;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  font: inherit;
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
 }
 
+.nav-link.active {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: auto;
+}
+
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #fff;
+}
+
+.user-avatar {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--navy);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.user-name {
+  font-weight: 500;
+}
+
+.role-tag {
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(200, 150, 62, 0.25);
+  color: #f0d4a0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 760px) {
+  .header-inner {
+    flex-wrap: wrap;
+  }
+
+  .main-nav {
+    order: 3;
+    width: 100%;
+    margin-left: 0;
+    overflow-x: auto;
+  }
+
+  .user-name {
+    display: none;
+  }
+}
+
+/* ---------- Butoane ---------- */
 .button {
-  padding: 0.6rem 1.1rem;
-  border: 0;
-  border-radius: 6px;
-  background: var(--primary);
+  display: inline-block;
+  padding: 0.6rem 1.15rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: var(--navy);
   color: #fff;
   font: inherit;
   font-weight: 600;
+  text-align: center;
+  text-decoration: none;
   cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
 }
 
 .button:hover:not(:disabled) {
-  background: var(--primary-dark);
+  background: var(--navy-soft);
 }
 
 .button:disabled {
@@ -121,23 +228,80 @@ form input {
   cursor: default;
 }
 
-.button-secondary {
-  background: transparent;
-  color: var(--primary);
-  border: 1px solid var(--primary);
+.button-accent {
+  background: var(--accent);
+  color: var(--navy);
 }
 
-.button-secondary:hover:not(:disabled) {
-  background: #eaf1fb;
+.button-accent:hover:not(:disabled) {
+  background: var(--accent-dark);
+  color: #fff;
+}
+
+.button-light {
+  background: #fff;
+  color: var(--navy);
+}
+
+.button-light:hover:not(:disabled) {
+  background: #e9eef4;
+}
+
+.button-ghost {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #fff;
+}
+
+.button-ghost:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.button-outline {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--navy);
+}
+
+.button-outline:hover:not(:disabled) {
+  background: #eef2f7;
+}
+
+/* ---------- Formulare ---------- */
+form label {
+  display: block;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+form input,
+.field {
+  display: block;
+  width: 100%;
+  margin-top: 0.35rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--text);
+  font: inherit;
+  font-weight: 400;
+}
+
+form input:focus,
+.field:focus {
+  outline: 2px solid rgba(200, 150, 62, 0.55);
+  border-color: var(--accent);
 }
 
 .form-error {
   margin-bottom: 1rem;
-  padding: 0.6rem 0.8rem;
-  border: 1px solid var(--danger);
-  border-radius: 6px;
-  color: var(--danger);
+  padding: 0.65rem 0.85rem;
+  border: 1px solid #efc5c2;
+  border-radius: 8px;
   background: #fdf0ef;
+  color: var(--danger);
 }
 
 .form-error p {
@@ -149,27 +313,512 @@ form input {
   padding-left: 1.2rem;
 }
 
-.search {
-  width: 100%;
-  max-width: 420px;
-  margin-bottom: 1.25rem;
-  padding: 0.55rem 0.7rem;
+/* ---------- Carduri si pagina de autentificare ---------- */
+.card {
   border: 1px solid var(--border);
-  border-radius: 6px;
-  font: inherit;
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  padding: 1.5rem;
 }
 
+.auth-card {
+  max-width: 420px;
+  margin: 2.5rem auto;
+  padding: 2rem;
+}
+
+.auth-card h1 {
+  font-size: 1.6rem;
+}
+
+.auth-subtitle {
+  margin: 0 0 1.5rem;
+  color: var(--muted);
+}
+
+.auth-card .button {
+  width: 100%;
+  margin-top: 0.25rem;
+}
+
+.auth-switch {
+  margin: 1.25rem 0 0;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* ---------- Pagina principala ---------- */
+.hero {
+  padding: 3rem 2.25rem;
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at 85% 20%, rgba(200, 150, 62, 0.35), transparent 45%),
+    linear-gradient(135deg, var(--navy), var(--navy-soft));
+  color: #fff;
+}
+
+.hero h1 {
+  margin: 0.25rem 0 0.75rem;
+  font-size: 2.3rem;
+}
+
+.hero-kicker {
+  margin: 0;
+  color: #f0d4a0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.hero-text {
+  max-width: 560px;
+  margin: 0 0 1.75rem;
+  color: #d6dfea;
+  font-size: 1.05rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+@media (max-width: 600px) {
+  .hero {
+    padding: 2rem 1.25rem;
+  }
+
+  .hero h1 {
+    font-size: 1.8rem;
+  }
+}
+
+/* ---------- Antete de pagina, filtre, stari ---------- */
+.page-header {
+  margin-bottom: 1.5rem;
+}
+
+.page-header p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.toolbar .field {
+  width: auto;
+  min-width: 220px;
+  margin-top: 0;
+}
+
+.state {
+  padding: 2rem 0;
+  text-align: center;
+}
+
+.empty {
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--muted);
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background: #e8edf4;
+  color: var(--navy-soft);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.badge-accent {
+  background: #f6ead3;
+  color: #7a5718;
+}
+
+/* ---------- Carduri de hotel ---------- */
 .hotel-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
 }
 
-.hotel-card h2 {
-  margin: 0 0 0.25rem;
+.hotel-card {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
+}
+
+.hotel-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.hotel-cover {
+  display: flex;
+  align-items: flex-end;
+  height: 110px;
+  padding: 0.9rem 1.25rem;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.cover-0 {
+  background: linear-gradient(135deg, #12263f, #2c5282);
+}
+
+.cover-1 {
+  background: linear-gradient(135deg, #1f4d4a, #2f855a);
+}
+
+.cover-2 {
+  background: linear-gradient(135deg, #4a2c4f, #805ad5);
+}
+
+.cover-3 {
+  background: linear-gradient(135deg, #7a4b1c, #c8963e);
+}
+
+.hotel-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1.1rem 1.25rem 1.25rem;
+}
+
+.hotel-body h2 {
+  margin: 0;
   font-size: 1.15rem;
 }
 
-.hotel-card p {
-  margin: 0.35rem 0 0;
+.hotel-address {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.hotel-desc {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  color: var(--text);
+  font-size: 0.93rem;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.hotel-footer {
+  margin-top: auto;
+  padding-top: 0.75rem;
+}
+
+/* ---------- Pagina hotelului ---------- */
+.back-link {
+  display: inline-block;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.detail-hero {
+  margin-bottom: 2rem;
+  padding: 2rem 2.25rem;
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at 90% 15%, rgba(200, 150, 62, 0.3), transparent 45%),
+    linear-gradient(135deg, var(--navy), var(--navy-soft));
+  color: #fff;
+}
+
+.detail-hero h1 {
+  margin: 0.5rem 0 0.4rem;
+  font-size: 2rem;
+}
+
+.detail-hero p {
+  margin: 0.25rem 0 0;
+  max-width: 640px;
+  color: #d6dfea;
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip-row .badge {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
+.section {
+  margin-bottom: 2.25rem;
+}
+
+.section h2 {
+  margin: 0 0 1rem;
+  font-size: 1.35rem;
+}
+
+.room-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.room-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.room-card h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.room-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.93rem;
+}
+
+.price {
+  margin-top: auto;
+  padding-top: 0.5rem;
+  color: var(--navy);
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.price small {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.service-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.service-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  font-weight: 500;
+}
+
+.service-chip span {
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 400;
+}
+
+/* ---------- Lanturi ---------- */
+.chain-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.25rem;
+}
+
+.chain-card h2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+}
+
+.chain-card > p {
+  margin: 0 0 1rem;
+  color: var(--muted);
+}
+
+.link-list {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--border);
+  list-style: none;
+}
+
+.link-list li {
+  border-bottom: 1px solid var(--border);
+}
+
+.link-list a {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 0.25rem;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.link-list a:hover {
+  color: var(--accent-dark);
+}
+
+.link-list span {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+/* ---------- Tabel de camere ---------- */
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.data-table th {
+  background: #f8fafc;
+  color: var(--muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.data-table tbody tr:hover {
+  background: #fafbfd;
+}
+
+.data-table .num {
+  text-align: right;
+  white-space: nowrap;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+/* ---------- Servicii ---------- */
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
+}
+
+.service-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.service-top {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.service-icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #f6ead3;
+  color: #7a5718;
+  font-weight: 700;
+}
+
+.service-top h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.service-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.93rem;
+}
+
+.service-hotels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: auto;
+  padding-top: 0.5rem;
+}
+
+.service-hotels a {
+  text-decoration: none;
+}
+
+.shortcut-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.75rem;
+}
+
+.shortcut {
+  display: block;
+  color: var(--text);
+  text-decoration: none;
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
+}
+
+.shortcut:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.shortcut h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1.15rem;
+}
+
+.shortcut p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.93rem;
 }

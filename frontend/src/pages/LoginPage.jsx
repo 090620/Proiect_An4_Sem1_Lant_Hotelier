@@ -27,7 +27,8 @@ export default function LoginPage() {
 
   return (
     <section className="card auth-card">
-      <h1>Autentificare</h1>
+      <h1>Bine ai revenit</h1>
+      <p className="auth-subtitle">Autentifică-te ca să vezi hotelurile.</p>
       <form onSubmit={handleSubmit}>
         <label>
           Email
@@ -51,11 +52,11 @@ export default function LoginPage() {
         </label>
         <FormError error={error} />
         <button type="submit" className="button" disabled={submitting}>
-          {submitting ? 'Se autentifica...' : 'Intra in cont'}
+          {submitting ? 'Se autentifică...' : 'Intră în cont'}
         </button>
       </form>
-      <p className="muted">
-        Nu ai cont? <Link to="/register">Creeaza unul</Link>
+      <p className="auth-switch">
+        Nu ai cont? <Link to="/register">Creează unul</Link>
       </p>
     </section>
   );

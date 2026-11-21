@@ -27,7 +27,8 @@ export default function RegisterPage() {
 
   return (
     <section className="card auth-card">
-      <h1>Cont nou</h1>
+      <h1>Creează un cont</h1>
+      <p className="auth-subtitle">Durează un minut și ai acces la toate hotelurile.</p>
       <form onSubmit={handleSubmit}>
         <label>
           Nume complet
@@ -62,11 +63,11 @@ export default function RegisterPage() {
         </label>
         <FormError error={error} />
         <button type="submit" className="button" disabled={submitting}>
-          {submitting ? 'Se creeaza contul...' : 'Creeaza cont'}
+          {submitting ? 'Se creează contul...' : 'Creează cont'}
         </button>
       </form>
-      <p className="muted">
-        Ai deja cont? <Link to="/login">Autentifica-te</Link>
+      <p className="auth-switch">
+        Ai deja cont? <Link to="/login">Autentifică-te</Link>
       </p>
     </section>
   );

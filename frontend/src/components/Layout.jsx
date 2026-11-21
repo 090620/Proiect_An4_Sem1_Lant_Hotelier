@@ -4,6 +4,8 @@ import { useAuth } from '../hooks/useAuth.js';
 const NAV_LINKS = [
   { to: '/hotels', label: 'Hoteluri' },
   { to: '/chains', label: 'Lanțuri' },
+  { to: '/rooms', label: 'Camere' },
+  { to: '/services', label: 'Servicii' },
 ];
 
 export default function Layout() {

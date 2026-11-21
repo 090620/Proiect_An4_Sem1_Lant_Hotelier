@@ -1,7 +1,10 @@
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.js';
 
-const NAV_LINKS = [{ to: '/hotels', label: 'Hoteluri' }];
+const NAV_LINKS = [
+  { to: '/hotels', label: 'Hoteluri' },
+  { to: '/chains', label: 'Lanțuri' },
+];
 
 export default function Layout() {
   const { user, logout } = useAuth();

@@ -4,6 +4,7 @@ import Layout from './components/Layout.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import HotelsPage from './pages/HotelsPage.jsx';
 import HotelDetailPage from './pages/HotelDetailPage.jsx';
+import ChainsPage from './pages/ChainsPage.jsx';
 import HomePage from './pages/HomePage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
@@ -20,6 +21,7 @@ export default function App() {
             <Route element={<ProtectedRoute />}>
               <Route path="/hotels" element={<HotelsPage />} />
               <Route path="/hotels/:id" element={<HotelDetailPage />} />
+              <Route path="/chains" element={<ChainsPage />} />
             </Route>
           </Route>
         </Routes>

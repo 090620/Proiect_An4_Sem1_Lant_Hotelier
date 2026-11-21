@@ -2,8 +2,9 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import AuthProvider from './context/AuthProvider.jsx';
 import Layout from './components/Layout.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
-import HomePage from './pages/HomePage.jsx';
 import HotelsPage from './pages/HotelsPage.jsx';
+import HotelDetailPage from './pages/HotelDetailPage.jsx';
+import HomePage from './pages/HomePage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
 
@@ -18,6 +19,7 @@ export default function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route element={<ProtectedRoute />}>
               <Route path="/hotels" element={<HotelsPage />} />
+              <Route path="/hotels/:id" element={<HotelDetailPage />} />
             </Route>
           </Route>
         </Routes>

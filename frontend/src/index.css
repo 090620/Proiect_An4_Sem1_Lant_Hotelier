@@ -395,28 +395,249 @@ form input:focus,
   }
 }
 
-/* ---------- Lista de hoteluri (varianta initiala) ---------- */
-.search {
-  width: 100%;
-  max-width: 420px;
-  margin-bottom: 1.25rem;
-  padding: 0.6rem 0.75rem;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  font: inherit;
+/* ---------- Antete de pagina, filtre, stari ---------- */
+.page-header {
+  margin-bottom: 1.5rem;
 }
 
+.page-header p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.toolbar .field {
+  width: auto;
+  min-width: 220px;
+  margin-top: 0;
+}
+
+.state {
+  padding: 2rem 0;
+  text-align: center;
+}
+
+.empty {
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--muted);
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background: #e8edf4;
+  color: var(--navy-soft);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.badge-accent {
+  background: #f6ead3;
+  color: #7a5718;
+}
+
+/* ---------- Carduri de hotel ---------- */
 .hotel-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
 }
 
-.hotel-card h2 {
-  margin: 0 0 0.25rem;
+.hotel-card {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
+}
+
+.hotel-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.hotel-cover {
+  display: flex;
+  align-items: flex-end;
+  height: 110px;
+  padding: 0.9rem 1.25rem;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.cover-0 {
+  background: linear-gradient(135deg, #12263f, #2c5282);
+}
+
+.cover-1 {
+  background: linear-gradient(135deg, #1f4d4a, #2f855a);
+}
+
+.cover-2 {
+  background: linear-gradient(135deg, #4a2c4f, #805ad5);
+}
+
+.cover-3 {
+  background: linear-gradient(135deg, #7a4b1c, #c8963e);
+}
+
+.hotel-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1.1rem 1.25rem 1.25rem;
+}
+
+.hotel-body h2 {
+  margin: 0;
   font-size: 1.15rem;
 }
 
-.hotel-card p {
-  margin: 0.35rem 0 0;
+.hotel-address {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.hotel-desc {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  color: var(--text);
+  font-size: 0.93rem;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.hotel-footer {
+  margin-top: auto;
+  padding-top: 0.75rem;
+}
+
+/* ---------- Pagina hotelului ---------- */
+.back-link {
+  display: inline-block;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.detail-hero {
+  margin-bottom: 2rem;
+  padding: 2rem 2.25rem;
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at 90% 15%, rgba(200, 150, 62, 0.3), transparent 45%),
+    linear-gradient(135deg, var(--navy), var(--navy-soft));
+  color: #fff;
+}
+
+.detail-hero h1 {
+  margin: 0.5rem 0 0.4rem;
+  font-size: 2rem;
+}
+
+.detail-hero p {
+  margin: 0.25rem 0 0;
+  max-width: 640px;
+  color: #d6dfea;
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip-row .badge {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
+.section {
+  margin-bottom: 2.25rem;
+}
+
+.section h2 {
+  margin: 0 0 1rem;
+  font-size: 1.35rem;
+}
+
+.room-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.room-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.room-card h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.room-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.93rem;
+}
+
+.price {
+  margin-top: auto;
+  padding-top: 0.5rem;
+  color: var(--navy);
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.price small {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.service-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.service-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  font-weight: 500;
+}
+
+.service-chip span {
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 400;
 }
